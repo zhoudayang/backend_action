@@ -5,7 +5,7 @@
 #ifndef STL_STR_H
 #define STL_STR_H
 
-#include <MacTypes.h>
+#include <cstddef>
 #include <iostream>
 
 namespace zy {
