@@ -37,8 +37,6 @@ class string {
   char *data_;
 };
 
- //std::ostream &operator <<(std::ostream &os,const string &str);
-
 }
 
 #endif //STL_STR_H
