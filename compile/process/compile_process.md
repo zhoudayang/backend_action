@@ -30,4 +30,5 @@
 
 ```g++ -o helloworld helloworld.o```
 
-**最终生成的可执行文件名为hellworld**
+**最终生成的可执行文件名为helloworld**
+
