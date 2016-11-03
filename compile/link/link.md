@@ -32,8 +32,9 @@
 #### 动态链接库
 1.执行下述命令生成动态链接库
 ```g++ -fPIC -shared -o lib/libmath.so add.cpp sub.cpp```
+
 2.执行下述命令生成可执行文件
-g++ -o main main.cpp -L lib -lmath
+```g++ -o main main.cpp -L lib -lmath```
 
 > 此时执行./main, 会提示无法打开libmath.so动态链接库，只需要将libmath.so复制到　/usr/lib/中，这样程序就能够找到这个动态链接库。
 > LD_LIBRARY_PATH定义了程序执行时动态链接库的搜索路径，必要的时候可以自己定义这个环境变量来指定动态链接库的搜索路径.
