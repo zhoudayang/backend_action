@@ -14,6 +14,16 @@
 10. %MEM MEM占用比
 11. TIME+ 累计CPU占用时间
 12. COMMAND 命令名／命令行　
-　
-　
-　
+
+### ps 
+命令参数详解：
+1. ps -u user　显示指定用户的信息
+2. ps -ef　显示所有进程的信息
+3. ps -l 将当前登入的PID与相关信息显示出来
+4. ps aux 列出目前所有的正在内存中的程序
+
+STAT状态参数：
+1. R running 当前正在运行
+2. S sleeping 当前正在睡眠
+3. T stoped 当前程序已经停止
+4. Z zombie 当前进程已经僵死
