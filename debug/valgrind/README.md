@@ -46,19 +46,19 @@ int main(){
 done!
 ==13075== 
 ==13075== HEAP SUMMARY:
-    ==13075==     in use at exit: 40 bytes in 1 blocks
-    ==13075==   total heap usage: 1 allocs, 0 frees, 40 bytes allocated
-    ==13075== 
-    ==13075== LEAK SUMMARY:
-        ==13075==    definitely lost: 40 bytes in 1 blocks
-        ==13075==    indirectly lost: 0 bytes in 0 blocks
-        ==13075==      possibly lost: 0 bytes in 0 blocks
-        ==13075==    still reachable: 0 bytes in 0 blocks
-        ==13075==         suppressed: 0 bytes in 0 blocks
-        ==13075== Rerun with --leak-check=full to see details of leaked memory
-        ==13075== 
-        ==13075== For counts of detected and suppressed errors, rerun with: -v
-        ==13075== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==13075==     in use at exit: 40 bytes in 1 blocks
+==13075==   total heap usage: 1 allocs, 0 frees, 40 bytes allocated
+==13075== 
+==13075== LEAK SUMMARY:
+==13075==    definitely lost: 40 bytes in 1 blocks
+==13075==    indirectly lost: 0 bytes in 0 blocks
+==13075==      possibly lost: 0 bytes in 0 blocks
+==13075==    still reachable: 0 bytes in 0 blocks
+==13075==         suppressed: 0 bytes in 0 blocks
+==13075== Rerun with --leak-check=full to see details of leaked memory
+==13075== 
+==13075== For counts of detected and suppressed errors, rerun with: -v
+==13075== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
 ```
 
 ### 例2:使用未初始化的内存
@@ -156,19 +156,19 @@ int main(){
 the value of p is 5
 ==14738== 
 ==14738== HEAP SUMMARY:
-    ==14738==     in use at exit: 16 bytes in 1 blocks
-    ==14738==   total heap usage: 1 allocs, 0 frees, 16 bytes allocated
-    ==14738== 
-    ==14738== LEAK SUMMARY:
-        ==14738==    definitely lost: 16 bytes in 1 blocks
-        ==14738==    indirectly lost: 0 bytes in 0 blocks
-        ==14738==      possibly lost: 0 bytes in 0 blocks
-        ==14738==    still reachable: 0 bytes in 0 blocks
-        ==14738==         suppressed: 0 bytes in 0 blocks
-        ==14738== Rerun with --leak-check=full to see details of leaked memory
-        ==14738== 
-        ==14738== For counts of detected and suppressed errors, rerun with: -v
-        ==14738== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==14738==     in use at exit: 16 bytes in 1 blocks
+==14738==   total heap usage: 1 allocs, 0 frees, 16 bytes allocated
+==14738== 
+==14738== LEAK SUMMARY:
+==14738==    definitely lost: 16 bytes in 1 blocks
+==14738==    indirectly lost: 0 bytes in 0 blocks
+==14738==      possibly lost: 0 bytes in 0 blocks
+==14738==    still reachable: 0 bytes in 0 blocks
+==14738==         suppressed: 0 bytes in 0 blocks
+==14738== Rerun with --leak-check=full to see details of leaked memory
+==14738== 
+==14738== For counts of detected and suppressed errors, rerun with: -v
+==14738== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
 ```
 
 ### 例4:内存覆盖
