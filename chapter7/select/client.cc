@@ -33,10 +33,10 @@ int main() {
   cout << "recv: " << buffer << endl;
   bzero(buffer, sizeof(buffer));
   strcpy(buffer, "this is an client!\n");
-  send(connfd, buffer, 1024, 1);
+  send(connfd, buffer, 1024, 0);
   while (1) {
     bzero(buffer, sizeof(buffer));
-    scanf("%s", buffer);
+    scanf("%s",buffer);
     int p = strlen(buffer);
     buffer[p] = '\0';
     send(connfd, buffer, 1024, 0);
