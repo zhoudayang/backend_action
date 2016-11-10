@@ -34,16 +34,16 @@ int main() {
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-  for (int i = 1; i <=5; i++) {
+  for (int i = 0; i <=5; i++) {
     if (i%3 == 0) {
       pthread_t thread_id;
-      pthread_create(&thread_id, &attr, writer, (void *) writer_count);
+      pthread_create(&thread_id, &attr, writer,  (void *)writer_count);
       ++writer_count;
     }
     else
    {
       pthread_t thread_id;
-      pthread_create(&thread_id, &attr, reader, (void *) reader_count);
+      pthread_create(&thread_id, &attr, reader, (void *)reader_count);
       ++reader_count;
     }
   }
