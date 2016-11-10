@@ -68,6 +68,7 @@ void do_epoll(int listenfd){
   vector<epoll_event> fds(100);
   const int epollfd = epoll_create(100);
   add_event(epollfd,listenfd,EPOLLIN);
+  //保存fd和buf之间的对应关系
   unordered_map<int,char *> buffers;
   while(1){
     fds.clear();
