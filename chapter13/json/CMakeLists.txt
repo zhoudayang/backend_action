@@ -1,0 +1,7 @@
+project(json)
+cmake_minimum_required(VERSION 3.5)
+include_directories(../jsoncpp/include)
+link_directories(../jsoncpp/lib)
+add_definitions(-std=c++11)
+add_executable(json_test json_test.cc)
+target_link_libraries(json_test json)
