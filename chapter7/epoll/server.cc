@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <vector>
+#include <unordered_map>
 
 #include <iostream>
 using namespace std;
@@ -26,6 +27,7 @@ int socket_bind() {
   memset(&servaddr, 0, sizeof(servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(6666);
+  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
   if (bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr)) == -1) {
     cout<<"bind error"<<endl;
     exit(-1);
@@ -40,100 +42,86 @@ int socket_bind() {
   return listenfd;
 }
 
-void add_event(int epollfd,int fd,int state,vector<epoll_event> &fds){
+void add_event(int epollfd,int fd,int state){
   struct epoll_event ev;
   ev.events = state;
-  ev.data.fd = state;
+  ev.data.fd = fd;
   epoll_ctl(epollfd,EPOLL_CTL_ADD,fd,&ev);
-  fds.push_back(ev);
 }
 
-void delete_event(int epollfd,int fd,int state,vector<epoll_event> &fds){
+void delete_event(int epollfd,int fd,int state){
   struct epoll_event ev;
   ev.events = state;
   ev.data.fd = fd;
   epoll_ctl(epollfd,EPOLL_CTL_DEL,fd,&ev);
-  for(auto it = fds.begin();it!=fds.end();++it){
-    if((*it).data.fd == fd){
-      fds.erase(it);
-      break;
-    }
-  }
+
 }
 
-void modify_event(int epollfd,int fd,int state,vector<epoll_event> &fds){
+void modify_event(int epollfd,int fd,int state){
   struct epoll_event ev;
   ev.events = state;
   ev.data.fd = fd;
   epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev);
-  for(int i = 0;i<fds.size();i++){
-    if(fds[i].data.fd == fd){
-      fds[i].events = state;
-    }
-  }
-}
-
-
-void modify_event(int epollfd,int fd,int state,vector<epoll_event> &fds,char * buf ){
-  struct epoll_event ev;
-  ev.events = state;
-  ev.data.fd = fd;
-  epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev);
-  for(int i = 0;i<fds.size();i++){
-    if(fds[i].data.fd == fd){
-      fds[i].events = state;
-      fds[i].data.ptr = buf;
-    }
-  }
 }
 
 void do_epoll(int listenfd){
-  vector<epoll_event> fds;
-  int epollfd = epoll_create(100);
-  add_event(epollfd,listenfd,EPOLLIN,fds);
+  vector<epoll_event> fds(100);
+  const int epollfd = epoll_create(100);
+  add_event(epollfd,listenfd,EPOLLIN);
+  unordered_map<int,char *> buffers;
   while(1){
+    fds.clear();
+    fds.resize(100);
     int result = epoll_wait(epollfd,fds.data(),fds.size(),-1);
+    if(result >= fds.size()){
+      fds.resize(fds.size()*2);
+    }
+    cout<<"epoll return size:"<<result<<endl;
     for(int i =0;i<result;++i){
-      int fd = fds[i].data.fd;
-      if((fd == listenfd)&&(fds[i].events & EPOLLIN)){
+      epoll_event ev = fds[i];
+      const int fd = ev.data.fd;
+      if((fd == listenfd)&&(ev.events & EPOLLIN)){
         struct sockaddr_in cliaddr;
         socklen_t len = sizeof(cliaddr);
         int clifd = accept(listenfd,(struct sockaddr *)&cliaddr,&len);
         if(clifd == -1){
           cout<<"accpet error"<<endl;
+          exit(-1);
         }
         else{
-          cout<<"accpet a client "<<inet_ntoa(cliaddr.sin_addr)<<" : "<<cliaddr.sin_port<<endl;
+          cout<<"accpet a client "<<inet_ntoa(cliaddr.sin_addr)<<" : "<<cliaddr.sin_port<<" the file descriptor is "<<clifd<<endl;
           //add event for read for new client file descriptor
-          add_event(epollfd,clifd,EPOLLIN,fds);
+          add_event(epollfd,clifd,EPOLLIN);
         }
       }
-      else if(fds[i].events & EPOLLIN){
+      else if(ev.events & EPOLLIN){
         char * buf = new char [1024];
         memset(buf,0,1024);
         int n = read(fd,buf,1024);
         if(n==-1){
           cout<<"read error "<<endl;
           close(fd);
-          delete_event(epollfd,fd,EPOLLIN,fds);
+          delete_event(epollfd,fd,EPOLLIN);
         }
         else{
           cout<<"read message:"<<buf<<endl;
-          modify_event(epollfd,fd,EPOLLOUT,fds,buf);
+          modify_event(epollfd,fd,EPOLLOUT);
+          buffers[fd] = buf;
         }
       }
-      else if(fds[i].events & EPOLLOUT){
-        char * buf = static_cast<char *> (fds[i].data.ptr);
+      else if(ev.events & EPOLLOUT){
+        char * buf = buffers[fd];
         int n = write(fd,buf,strlen(buf));
         if(n == -1){
           cout<<"write error "<<endl;
           close(fd);
-          delete_event(epollfd,fd,EPOLLOUT,fds);
+          delete_event(epollfd,fd,EPOLLOUT);
         }
         else{
-          modify_event(epollfd,fd,EPOLLIN,fds,NULL);
+          modify_event(epollfd,fd,EPOLLIN);
+          buffers.erase(fd);
+          delete buf;
         }
-        delete buf;
       }
     }
   }

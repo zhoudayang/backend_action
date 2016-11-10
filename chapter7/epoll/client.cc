@@ -13,14 +13,6 @@
 
 #include <iostream>
 using namespace std;
-void handle_connection(int sockfd){
-
-
-  
-}
-
-
-
 
 int main() {
   int sockfd;
@@ -30,7 +22,30 @@ int main() {
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(6666);
   inet_pton(AF_INET,"127.0.0.1",&servaddr.sin_addr);
-  handle_connection(sockfd);
-  close(sockfd);
+  if(connect(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr)) == -1){
+    cout<<"connect error!"<<endl;
+    exit(-1);
+  }
+  while(true){
+    char buf[1024];
+    memset(buf,0,1024);
+    scanf("%s",buf);
+    write(sockfd,buf,1024);
+    memset(buf,0,1024);
+    int ret = read(sockfd,buf,1024);
+    if(ret == 0){
+      close(sockfd);
+      return -1;
+    }
+    else if(ret <0){
+      close(sockfd);
+      cout<<"read error!"<<endl;
+      return -1;
+    }
+    else{
+      buf[ret] = '\0';
+      cout<<"read "<<buf<<endl;
+    }
+  }
   return 0;
 }
