@@ -14,7 +14,7 @@ int main() {
   struct sockaddr_in peer_addr;
   //create socket
   if ((serverfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-    cout << "bind error" << endl;
+    cout << "create error" << endl;
     return -1;
   }
   my_addr.sin_family = AF_INET;
