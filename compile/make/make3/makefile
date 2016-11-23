@@ -1,6 +1,6 @@
 cc = gcc
 XX = g++
-CFLAGS = -Wall -o2 -g
+CFLAGS = -Wall -O2 -g
 TARGET = helloworld
 
 # 对每一个.c文件，使用gcc进行编译，生成.o文件
